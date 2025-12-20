@@ -1,4 +1,4 @@
-# 🚀 Gemini Chat to Markdown Converter
+# 🚀 Google Aistudio Chat to Markdown Converter
 
 一个强大的Chrome扩展程序，可以将Gemini共享对话记录转换为清晰、结构化的Markdown格式文件。
 
