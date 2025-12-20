@@ -32,7 +32,7 @@
 
 1. **下载扩展程序**
    ```bash
-   git clone https://github.com/your-username/GeminiChat2Markdown.git
+   git clone https://github.com/LarryGuan/GeminiChat2Markdown.git
    # 或直接下载ZIP文件并解压
    ```
 
