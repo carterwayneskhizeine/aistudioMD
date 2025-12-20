@@ -1,0 +1,34 @@
+{
+  "extensionName": {
+    "message": "Aistudio Chat To Markdown",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Converts AI Studio chat records into a question-and-answer Markdown format.",
+    "description": "Description of the extension"
+  },
+  "downloadButton": {
+    "message": "Download | Markdown",
+    "description": "Text for the download button"
+  },
+  "copyButton": {
+    "message": "Copy | Markdown",
+    "description": "Text for the copy button"
+  },
+  "downloadSuccess": {
+    "message": "✅ Markdown file downloaded!",
+    "description": "Success message for download"
+  },
+  "copySuccess": {
+    "message": "📋 Markdown copied to clipboard!",
+    "description": "Success message for copy"
+  },
+  "extractionFailed": {
+    "message": "❌ Failed to extract content. Please make sure you are on an AI Studio page.",
+    "description": "Error message when content extraction fails"
+  },
+  "openAIStudioShare": {
+    "message": "🔗 Please open an AI Studio page first!",
+    "description": "Message when not on an AI Studio page"
+  }
+}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html style="border-radius: 12px; overflow: hidden;">
+
+<head>
+  <meta charset="UTF-8">
+  <title>AI Studio Chat to Markdown</title>
+  <style>
+    html {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 320px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: 1.4em;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 15px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #copyButton {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    }
+
+    #copyButton:hover {
+      background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 0.9em;
+      text-align: center;
+      border-radius: 6px;
+      font-weight: 500;
+      min-height: 20px;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    #status.show {
+      display: flex;
+    }
+
+    .status-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status-info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8em;
+      color: #666;
+    }
+
+    .version {
+      font-weight: 500;
+    }
+
+    .github-link {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #666;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .github-link:hover {
+      color: #333;
+    }
+
+    .file-input-container {
+      margin-bottom: 20px;
+    }
+
+    .file-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 15px;
+      background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .file-label:hover {
+      background: linear-gradient(135deg, #546e7a 0%, #37474f 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .file-label:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .github-icon {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>🚀 AI Studio Chat to Markdown</h2>
+  <div class="file-input-container">
+    <label for="fileInput" class="file-label">
+      <svg class="icon" viewBox="0 0 24 24">
+        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+        <path d="M16,13H13V17H11V13H8L12,9L16,13Z" />
+      </svg>
+      Import AI Studio JSON
+    </label>
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+  </div>
+
+  <button id="downloadButton">
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+      <path d="M12,11L16,15H13V19H11V15H8L12,11Z" />
+    </svg>
+    <span id="downloadText">下载 | Markdown</span>
+  </button>
+  <button id="copyButton">
+    <svg class="icon" viewBox="0 0 24 24">
+      <path
+        d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+    </svg>
+    <span id="copyText">复制 | Markdown</span>
+  </button>
+  <div id="status"></div>
+
+  <div class="footer">
+    <div class="version">v<span id="version">1.0.1</span></div>
+    <a href="https://github.com/LarryGuan/AistudioChat2Markdown" target="_blank" class="github-link" title="查看源代码">
+      <svg class="github-icon" viewBox="0 0 24 24">
+        <path
+          d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
+      </svg>
+      GitHub
+    </a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
