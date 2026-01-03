@@ -166,20 +166,6 @@ def main():
         help="Select one or more files exported from AI Studio (without extension)",
     )
 
-    st.markdown("---")
-
-    # Show download instructions
-    st.markdown("Chat records are downloaded from the Google AI Studio folder in drive.google.com:")
-    st.markdown("1. Go to drive.google.com")
-    st.markdown("2. Navigate to the 'Google AI Studio' folder")
-    st.markdown("3. Download the chat record files you need")
-
-    # Show image
-    try:
-        st.image("download.png", caption="Download Instructions", use_container_width=True)
-    except:
-        st.info("Download instructions image not found")
-
     if uploaded_files:
         st.info(f"Selected {len(uploaded_files)} files")
 
@@ -230,6 +216,19 @@ def main():
             else:
                 st.warning("⚠️ No files successfully converted, please check if the file format is correct")
 
+    st.markdown("---")
+
+    # Show download instructions
+    st.markdown("Chat records are downloaded from the Google AI Studio folder in drive.google.com:")
+    st.markdown("1. Go to drive.google.com")
+    st.markdown("2. Navigate to the 'Google AI Studio' folder")
+    st.markdown("3. Download the chat record files you need")
+
+    # Show image
+    try:
+        st.image("download.png", caption="Download Instructions", use_container_width=True)
+    except:
+        st.info("Download instructions image not found")
 
 
 if __name__ == "__main__":
