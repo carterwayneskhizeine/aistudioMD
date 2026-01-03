@@ -205,14 +205,14 @@ def main():
                 with col2:
                     # Batch download
                     st.markdown("#### 📦 Batch Download")
-                    if st.button("📥 Download All Files (ZIP)"):
-                        zip_buffer = create_zip(results)
-                        st.download_button(
-                            label="Download All Files",
-                            data=zip_buffer,
-                            file_name=f"AistudioChatRecords-{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip",
-                            mime="application/zip",
-                        )
+                    zip_buffer = create_zip(results)
+                    st.download_button(
+                        label="📥 Download All Files (ZIP)",
+                        data=zip_buffer.getvalue(),
+                        file_name=f"AistudioChatRecords-{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip",
+                        mime="application/zip",
+                        key="batch_download",
+                    )
             else:
                 st.warning("⚠️ No files successfully converted, please check if the file format is correct")
 
