@@ -8,7 +8,7 @@ import base64
 
 
 def fix_unpaired_backticks(text):
-    """修复不匹配的反引号"""
+    """Fix unpaired backticks"""
     triple_backtick_matches = re.findall(r"```", text)
     triple_backtick_count = len(triple_backtick_matches)
     if triple_backtick_count % 2 != 0:
@@ -17,23 +17,23 @@ def fix_unpaired_backticks(text):
 
 
 def downgrade_headers(text):
-    """智能降级标题以避免与文档结构冲突"""
-    # 检测内容中的最高标题级别（包括前面有空格的标题）
+    """Intelligently downgrade headers to avoid conflicts with document structure"""
+    # Detect the highest header level in content (including headers with leading spaces)
     header_matches = re.findall(r"^\s*(#{1,6})\s+", text, re.MULTILINE)
     if not header_matches:
         return text
 
-    # 找到最高级别（最少的#数量）
+    # Find the highest level (minimum number of #)
     min_level = min(len(match) for match in header_matches)
 
-    # 计算安全的降级幅度
+    # Calculate safe downgrade amount
     safe_start_level = 2
     downgrade_amount = safe_start_level - min_level
 
-    # 如果原内容标题级别已经很低，则减少降级幅度
+    # If original header level is already low, reduce downgrade amount
     final_downgrade_amount = max(0, min(downgrade_amount, 6 - min_level))
 
-    # 应用智能降级
+    # Apply intelligent downgrade
     def replace_header(match):
         leading_spaces = match.group(1)
         hashes = match.group(2)
@@ -46,29 +46,29 @@ def downgrade_headers(text):
 
 
 def cleanup_multiple_empty_lines(text):
-    """清理多个连续空行"""
+    """Clean up multiple consecutive empty lines"""
     return re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
 
 
 def convert_json_to_markdown(data, filename):
-    """将JSON数据转换为Markdown格式"""
+    """Convert JSON data to Markdown format"""
     markdown = ""
 
-    # 生成时间戳
+    # Generate timestamp
     date = datetime.now()
     timestamp = date.strftime("%Y%m%d_%H%M%S")
 
-    # 提取标题（如果有的话）
+    # Extract title (if any)
     title = filename.replace(".json", "").replace("-", " ").replace("_", " ")
     title = " ".join(word.capitalize() for word in title.split())
 
-    # 添加标题部分
+    # Add title section
     markdown += f"# {title}\n\n"
     markdown += f"**Source File:** {filename}\n"
     markdown += f"**Created:** {timestamp}\n\n"
     markdown += "---\n\n"
 
-    # 处理对话内容
+    # Process conversation content
     if isinstance(data, dict) and "chunkedPrompt" in data:
         chunks = data["chunkedPrompt"].get("chunks", [])
     elif isinstance(data, list):
@@ -93,28 +93,28 @@ def convert_json_to_markdown(data, filename):
 
         text = chunk.get("text", "")
         if text:
-            # 修复不匹配的反引号
+            # Fix unpaired backticks
             text = fix_unpaired_backticks(text)
-            # 降级标题
+            # Downgrade headers
             text = downgrade_headers(text)
 
             markdown += f"# {speaker}\n\n{text}\n\n"
 
-    # 清理多个连续空行
+    # Clean up multiple consecutive empty lines
     markdown = cleanup_multiple_empty_lines(markdown)
 
     return markdown, timestamp
 
 
 def process_uploaded_files(uploaded_files):
-    """处理上传的文件列表，返回Markdown内容和文件名列表"""
+    """Process uploaded file list, return Markdown content and filename list"""
     results = []
 
     for uploaded_file in uploaded_files:
         try:
             content = uploaded_file.read()
             
-            # 处理无后缀文件，自动添加.json后缀
+            # Handle files without extension, automatically add .json extension
             file_name = uploaded_file.name
             if not file_name.endswith('.json'):
                 file_name += '.json'
@@ -123,7 +123,7 @@ def process_uploaded_files(uploaded_files):
 
             markdown, timestamp = convert_json_to_markdown(data, file_name)
 
-            # 生成输出文件名
+            # Generate output filename
             output_filename = f"AistudioChatRecord-{timestamp}-{file_name.replace('.json', '')}.md"
 
             results.append(
@@ -135,15 +135,15 @@ def process_uploaded_files(uploaded_files):
             )
 
         except json.JSONDecodeError:
-            st.error(f"无法解析文件 {uploaded_file.name}，请确保它是有效的JSON格式")
+            st.error(f"Unable to parse file {uploaded_file.name}, please ensure it is a valid JSON format")
         except Exception as e:
-            st.error(f"处理文件 {uploaded_file.name} 时出错: {str(e)}")
+            st.error(f"Error processing file {uploaded_file.name}: {str(e)}")
 
     return results
 
 
 def create_zip(results):
-    """创建包含所有Markdown文件的ZIP"""
+    """Create ZIP containing all Markdown files"""
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
         for result in results:
@@ -159,43 +159,57 @@ def main():
 
     st.title("AI Studio Chat to Markdown Converter")
 
-    # 文件上传
+    # File uploader
     uploaded_files = st.file_uploader(
-        "上传文件",
+        "Upload files",
         accept_multiple_files=True,
-        help="选择一个或多个AI Studio导出的无后缀文件",
+        help="Select one or more files exported from AI Studio (without extension)",
     )
 
-    if uploaded_files:
-        st.info(f"已选择 {len(uploaded_files)} 个文件")
+    st.markdown("---")
 
-        # 处理按钮
-        if st.button("🔄 转换为Markdown", type="primary"):
-            with st.spinner("正在转换文件..."):
+    # Show download instructions
+    st.markdown("Chat records are downloaded from the Google AI Studio folder in drive.google.com:")
+    st.markdown("1. Go to drive.google.com")
+    st.markdown("2. Navigate to the 'Google AI Studio' folder")
+    st.markdown("3. Download the chat record files you need")
+
+    # Show image
+    try:
+        st.image("download.png", caption="Download Instructions", use_container_width=True)
+    except:
+        st.info("Download instructions image not found")
+
+    if uploaded_files:
+        st.info(f"Selected {len(uploaded_files)} files")
+
+        # Process button
+        if st.button("🔄 Convert to Markdown", type="primary"):
+            with st.spinner("Converting files..."):
                 results = process_uploaded_files(uploaded_files)
 
             if results:
-                st.success(f"✅ 成功转换 {len(results)} 个文件！")
+                st.success(f"✅ Successfully converted {len(results)} files!")
 
-                # 显示转换结果预览
-                st.subheader("转换结果")
+                # Show conversion results preview
+                st.subheader("Conversion Results")
                 for idx, result in enumerate(results):
                     with st.expander(f"📄 {result['filename']}"):
-                        st.markdown(f"**原始文件:** {result['original_filename']}")
+                        st.markdown(f"**Original File:** {result['original_filename']}")
                         st.markdown("---")
                         st.markdown(result["markdown"])
 
-                # 下载选项
-                st.subheader("下载选项")
+                # Download options
+                st.subheader("Download Options")
 
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    # 单独下载
-                    st.markdown("#### 📥 单独下载")
+                    # Individual download
+                    st.markdown("#### 📥 Individual Download")
                     for idx, result in enumerate(results):
                         st.download_button(
-                            label=f"下载 {result['filename']}",
+                            label=f"Download {result['filename']}",
                             data=result["markdown"],
                             file_name=result["filename"],
                             mime="text/markdown",
@@ -203,18 +217,18 @@ def main():
                         )
 
                 with col2:
-                    # 批量打包下载
-                    st.markdown("#### 📦 批量打包下载")
-                    if st.button("📥 下载全部文件（ZIP）"):
+                    # Batch download
+                    st.markdown("#### 📦 Batch Download")
+                    if st.button("📥 Download All Files (ZIP)"):
                         zip_buffer = create_zip(results)
                         st.download_button(
-                            label="下载所有文件",
+                            label="Download All Files",
                             data=zip_buffer,
                             file_name=f"AistudioChatRecords-{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip",
                             mime="application/zip",
                         )
             else:
-                st.warning("⚠️ 没有成功转换的文件，请检查文件格式是否正确")
+                st.warning("⚠️ No files successfully converted, please check if the file format is correct")
 
 
 
