@@ -1,0 +1,26 @@
+{
+  "chunkedPrompt": {
+    "chunks": [
+      {
+        "role": "user",
+        "text": "你好，请介绍一下Python编程语言的特点",
+        "isThought": false
+      },
+      {
+        "role": "model",
+        "text": "# Python编程语言特点\n\nPython是一种高级编程语言，具有以下主要特点：\n\n## 1. 简单易学\n- 语法简洁清晰\n- 代码可读性强\n- 学习曲线平缓\n\n## 2. 功能强大\n```python\n# 示例代码\ndef greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"World\"))\n```\n\n## 3. 应用广泛\n- Web开发\n- 数据科学\n- 人工智能\n- 自动化脚本\n\nPython是一个非常优秀的编程语言！",
+        "isThought": false
+      },
+      {
+        "role": "user",
+        "text": "Python有哪些常用的库？",
+        "isThought": false
+      },
+      {
+        "role": "model",
+        "text": "# Python常用库\n\n## 数据科学\n- **NumPy**: 数值计算\n- **Pandas**: 数据分析\n- **Matplotlib**: 数据可视化\n\n## Web开发\n- **Django**: 全功能Web框架\n- **Flask**: 轻量级Web框架\n- **FastAPI**: 高性能API框架\n\n## 机器学习\n- **TensorFlow**: 深度学习框架\n- **PyTorch**: 另一个深度学习框架\n- **scikit-learn**: 机器学习库\n\n这些库都非常强大且易于使用！",
+        "isThought": false
+      }
+    ]
+  }
+}
