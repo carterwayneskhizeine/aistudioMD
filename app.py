@@ -113,12 +113,18 @@ def process_uploaded_files(uploaded_files):
     for uploaded_file in uploaded_files:
         try:
             content = uploaded_file.read()
+            
+            # 处理无后缀文件，自动添加.json后缀
+            file_name = uploaded_file.name
+            if not file_name.endswith('.json'):
+                file_name += '.json'
+            
             data = json.loads(content.decode("utf-8"))
 
-            markdown, timestamp = convert_json_to_markdown(data, uploaded_file.name)
+            markdown, timestamp = convert_json_to_markdown(data, file_name)
 
             # 生成输出文件名
-            output_filename = f"AistudioChatRecord-{timestamp}-{uploaded_file.name.replace('.json', '')}.md"
+            output_filename = f"AistudioChatRecord-{timestamp}-{file_name.replace('.json', '')}.md"
 
             results.append(
                 {
@@ -148,17 +154,16 @@ def create_zip(results):
 
 def main():
     st.set_page_config(
-        page_title="AI Studio Chat to Markdown Converter", page_icon="🚀", layout="wide"
+        page_title="AI Studio Chat to Markdown Converter", page_icon="📄", layout="wide"
     )
 
-    st.title("🚀 AI Studio Chat to Markdown Converter")
+    st.title("AI Studio Chat to Markdown Converter")
 
     # 文件上传
     uploaded_files = st.file_uploader(
-        "上传JSON文件",
-        type=["json"],
+        "上传文件",
         accept_multiple_files=True,
-        help="选择一个或多个AI Studio导出的JSON文件",
+        help="选择一个或多个AI Studio导出的无后缀文件",
     )
 
     if uploaded_files:
